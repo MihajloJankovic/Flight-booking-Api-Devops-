@@ -1,0 +1,22 @@
+trigger: none
+
+pool:
+  vmImage: windows-latest
+
+steps:
+- task: DownloadBuildArtifacts@1
+  displayName: 'Download Build Artifacts'
+  inputs:
+    buildType: specific
+    project: 'Automation'
+    pipeline: 'app ci'
+    artifactName: 'drop'
+    downloadPath: '$(Build.ArtifactsDirectory)'
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Levi9Internship2023SP-Automation'
+    appType: 'webApp'
+    WebAppName: 'app-PlanePal-dev-northeurope-00'
+    package: '$(Build.Repository.LocalPath)\$(Build.ArtifactsDirectory)\drop/WebApp.zip'
+    
